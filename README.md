@@ -80,6 +80,7 @@ GoDoc: [https://godoc.org/github.com/samber/lo](https://godoc.org/github.com/sam
 Supported helpers for slices:
 
 - [Filter](#filter)
+- [FilterZ](#filterz)
 - [Map](#map)
 - [UniqMap](#uniqmap)
 - [FilterMap](#filtermap)
@@ -343,6 +344,21 @@ even := lo.Filter([]int{1, 2, 3, 4}, func(x int, index int) bool {
 ```
 
 [[play](https://go.dev/play/p/Apjg3WeSi7K)]
+
+### FilterZ
+
+It works like [Filter](#filter), but modifies the source slice in place and returns a filtered array without allocating new memory. The returned slice retains the original slice’s capacity.
+
+```go
+source := []int{1, 2, 3, 4}
+even := lo.FilterZ(source, func(x int, index int) bool {
+    return x%2 == 0
+})
+// source: []int{2, 4, 3, 4} | WARN: source is modified
+// even: []int{2, 4}         | NOTE: cap: 4
+```
+
+[[play](https://go.dev/play/p/oXtGncCY-w0)]
 
 ### Map
 

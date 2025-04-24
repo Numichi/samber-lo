@@ -21,6 +21,22 @@ func Filter[T any, Slice ~[]T](collection Slice, predicate func(item T, index in
 	return result
 }
 
+// FilterZ is a zero allocation version as Filter.
+// It iterates over elements of collection, returning an array of all elements predicate returns truthy for.
+// Warning: Source slice will have been manipulated!
+// Play: https://go.dev/play/p/oXtGncCY-w0
+func FilterZ[T any, Slice ~[]T](collection Slice, predicate func(item T, index int) bool) Slice {
+	result := collection[:0]
+
+	for i := range collection {
+		if predicate(collection[i], i) {
+			result = append(result, collection[i])
+		}
+	}
+
+	return result
+}
+
 // Map manipulates a slice and transforms it to a slice of another type.
 // Play: https://go.dev/play/p/OkPcYAhBo0D
 func Map[T any, R any](collection []T, iteratee func(item T, index int) R) []R {

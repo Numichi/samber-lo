@@ -45,6 +45,40 @@ func genSliceInt(n int) []int {
 	return res
 }
 
+func BenchmarkFilter(b *testing.B) {
+	predicate := func(item int, index int) bool {
+		return item%2 == 0
+	}
+
+	for _, v := range lengths {
+		ints := genSliceInt(v)
+
+		b.Run(fmt.Sprintf("%d", v), func(b *testing.B) {
+			b.ReportAllocs()
+			for i := 0; i < b.N; i++ {
+				_ = Filter(ints, predicate)
+			}
+		})
+	}
+}
+
+func BenchmarkFilterZ(b *testing.B) {
+	predicate := func(item int, index int) bool {
+		return item%2 == 0
+	}
+
+	for _, v := range lengths {
+		ints := genSliceInt(v)
+
+		b.Run(fmt.Sprintf("%d", v), func(b *testing.B) {
+			b.ReportAllocs()
+			for i := 0; i < b.N; i++ {
+				_ = FilterZ(ints, predicate)
+			}
+		})
+	}
+}
+
 func BenchmarkFlatten(b *testing.B) {
 	for _, n := range lengths {
 		ints := make([][]int, 0, n)

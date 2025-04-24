@@ -33,6 +33,32 @@ func TestFilter(t *testing.T) {
 	is.IsType(nonempty, allStrings, "type preserved")
 }
 
+func TestFilterZ(t *testing.T) {
+	t.Parallel()
+	is := assert.New(t)
+
+	r1src := []int{1, 2, 3, 4}
+	r1 := FilterZ(r1src, func(x int, _ int) bool {
+		return x%2 == 0
+	})
+
+	is.Equal(r1src, []int{2, 4, 3, 4}) // WARN: this is a side effect of the filter
+	is.Equal(r1, []int{2, 4})
+	is.Equal(4, cap(r1))
+
+	r2 := FilterZ([]string{"", "foo", "", "bar", ""}, func(x string, _ int) bool {
+		return len(x) > 0
+	})
+	is.Equal(r2, []string{"foo", "bar"})
+
+	type myStrings []string
+	allStrings := myStrings{"", "foo", "bar"}
+	nonempty := FilterZ(allStrings, func(x string, _ int) bool {
+		return len(x) > 0
+	})
+	is.IsType(nonempty, allStrings, "type preserved")
+}
+
 func TestMap(t *testing.T) {
 	t.Parallel()
 	is := assert.New(t)
